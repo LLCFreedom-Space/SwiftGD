@@ -1,14 +1,14 @@
-import XCTest
+import Testing
 @testable import SwiftGD
 
-class TestImage: XCTestCase {
-    /// Trying to create a list that *should* have at least
-    /// one font for most Swift-compatible platforms.
-    /// NOTE: Tests might fail on platforms that don’t have
-    /// one of these fonts installed. E.g.: Docker images
-    internal static let fontList = [
+@Suite("Image rendering")
+struct TestImage {
+    /// Список шрифтів, серед яких зазвичай є доступний на платформі.
+    /// Тести можуть не пройти, якщо жоден із цих шрифтів не встановлено.
+    static let fontList = [
         "SFCompact",
         "ArialMT",
+        "Arial",
         "Arial",
         "Roboto",
         "Ubuntu",
@@ -17,47 +17,64 @@ class TestImage: XCTestCase {
         "SSTPro-Roman"
     ]
 
-    func testRenderText() throws {
+    @Test("Renders text")
+    func renderText() throws {
         guard let image = Image(width: 640, height: 480) else {
             throw Error.invalidImage(reason: "Could not initialize image")
         }
-        let basepoint = Point(x: 320, y: 240)
-        let renderBounds = image.renderText(
+
+        let bounds = image.renderText(
             "SwiftGD",
-            from: basepoint,
+            from: Point(x: 320, y: 240),
             fontList: Self.fontList,
             color: .red,
             size: 50,
             angle: .degrees(-15)
         )
 
-        XCTAssertFalse(try isEmptyBounds(for: renderBounds), "When text is rendered, it returns NON-zero Points")
+        #expect(try !isEmptyBounds(for: bounds))
     }
 
-    func testRenderEmptyText() throws {
+    @Test("Empty text returns empty bounds")
+    func renderEmptyText() throws {
         guard let image = Image(width: 640, height: 480) else {
             throw Error.invalidImage(reason: "Could not initialize image")
         }
-        let renderBounds = image.renderText("", from: .zero, fontList: ["Arial", "Ubuntu", "Roboto"], color: .black, size: 18.0)
 
-        XCTAssertTrue(try isEmptyBounds(for: renderBounds), "Empty `text` values return tuple of zero-value Points")
+        let bounds = image.renderText(
+            "",
+            from: .zero,
+            fontList: ["Arial", "Ubuntu", "Roboto"],
+            color: .black,
+            size: 18
+        )
+
+        #expect(try isEmptyBounds(for: bounds))
     }
 
-    func testRenderEmptyFontList() throws {
+    @Test("Empty font list returns empty bounds")
+    func renderWithEmptyFontList() throws {
         guard let image = Image(width: 640, height: 480) else {
             throw Error.invalidImage(reason: "Could not create image")
         }
-        let renderBounds = image.renderText("Hello, World", from: .zero, fontList: [], color: .white, size: 18.0)
 
-        XCTAssertTrue(try isEmptyBounds(for: renderBounds), "Empty fontLists return tuple of zero-value Points")
+        let bounds = image.renderText(
+            "Hello, World",
+            from: .zero,
+            fontList: [],
+            color: .white,
+            size: 18
+        )
+
+        #expect(try isEmptyBounds(for: bounds))
     }
 
-    func testCreateAndExportAVIFImage() throws {
+    @Test("Exports an AVIF image")
+    func createAndExportAVIFImage() throws {
         guard let image = Image(width: 640, height: 480) else {
             throw Error.invalidImage(reason: "Could not initialize image")
         }
 
-        // Perform some operations on the image, e.g., render text
         image.renderText(
             "SwiftGD AVIF Test",
             from: Point(x: 320, y: 240),
@@ -67,27 +84,23 @@ class TestImage: XCTestCase {
             angle: .degrees(0)
         )
 
-        // Export the image to AVIF format
-        guard let avifData = try? image.export(as: .avif) else {
-            XCTFail("Failed to export image to AVIF format")
-            return
-        }
-
-        // Check if the exported data is not nil and has reasonable size
-        XCTAssertNotNil(avifData, "Exported AVIF data should not be nil")
-        XCTAssertFalse(avifData.isEmpty, "Exported AVIF data should not be empty")
+        let avifData = try image.export(as: .avif)
+        #expect(!avifData.isEmpty)
     }
-}
 
-extension TestImage {
-    private func isEmptyBounds(for resultValues: (upperLeft: Point, upperRight: Point, lowerRight: Point, lowerLeft: Point)) throws -> Bool {
-        return [
-            resultValues.upperLeft,
-            resultValues.upperRight,
-            resultValues.lowerRight,
-            resultValues.lowerLeft
-        ].allSatisfy {
-            $0 == .zero
-        }
+    private func isEmptyBounds(
+        for result: (
+            upperLeft: Point,
+            upperRight: Point,
+            lowerRight: Point,
+            lowerLeft: Point
+        )
+    ) -> Bool {
+        [
+            result.upperLeft,
+            result.upperRight,
+            result.lowerRight,
+            result.lowerLeft
+        ].allSatisfy { $0 == .zero }
     }
 }

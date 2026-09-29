@@ -1,5 +1,5 @@
 /// A structure that represents a geometric angle.
-public struct Angle {
+public struct Angle: Sendable {
     /// The angle value in radians.
     public var radians: Double
 
@@ -26,7 +26,7 @@ public struct Angle {
 
 extension Angle {
     /// A zero angle.
-    public static let zero = Angle(degrees: 0)
+    public static let zero = Angle(degrees: .zero)
 
     /// An angle.
     ///

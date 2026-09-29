@@ -1,4 +1,4 @@
-public struct Color {
+public struct Color: Sendable {
     public var redComponent: Double
     public var greenComponent: Double
     public var blueComponent: Double
@@ -15,13 +15,13 @@ public struct Color {
 // MARK: Constants
 
 extension Color {
-    public static let red = Color(red: 1, green: 0, blue: 0, alpha: 1)
+    public static let red = Color(red: 1, green: .zero, blue: .zero, alpha: 1)
 
-    public static let green = Color(red: 0, green: 1, blue: 0, alpha: 1)
+    public static let green = Color(red: .zero, green: 1, blue: .zero, alpha: 1)
 
-    public static let blue = Color(red: 0, green: 0, blue: 1, alpha: 1)
+    public static let blue = Color(red: .zero, green: .zero, blue: 1, alpha: 1)
 
-    public static let black = Color(red: 0, green: 0, blue: 0, alpha: 1)
+    public static let black = Color(red: .zero, green: .zero, blue: .zero, alpha: 1)
 
     public static let white = Color(red: 1, green: 1, blue: 1, alpha: 1)
 }

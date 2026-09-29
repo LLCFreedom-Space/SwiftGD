@@ -1,5 +1,5 @@
 /// A structure that contains a point in a two-dimensional coordinate system.
-public struct Point {
+public struct Point: Sendable {
     /// The x-coordinate of the point.
     public var x: Int
 

@@ -1,0 +1,15 @@
+{
+  "originHash" : "1159cca401940f67ea43fc8cbe0629a07833116f4a4b621aa74e6486db4345ef",
+  "pins" : [
+    {
+      "identity" : "cgd",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/LLCFreedom-Space/Cgd",
+      "state" : {
+        "revision" : "9adfd93cbdbab8bb44efeb087c1423f6a567c703",
+        "version" : "2.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}

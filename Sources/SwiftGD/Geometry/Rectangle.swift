@@ -1,5 +1,5 @@
 /// A structure that represents a rectangle.
-public struct Rectangle {
+public struct Rectangle: Sendable {
     /// The origin of the rectangle.
     public var point: Point
 

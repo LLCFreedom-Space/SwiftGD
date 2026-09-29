@@ -1,5 +1,5 @@
 /// A structure that represents a two-dimensional size.
-public struct Size {
+public struct Size: Sendable {
     /// The width value of the size.
     public var width: Int
 
